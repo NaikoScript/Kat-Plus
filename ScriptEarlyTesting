@@ -169,6 +169,16 @@ Template2.Parent = Items
 Template2.ItemName.Text = "Jumpscare"
 Template2.Visible = true
 
+local Template3 = OriginFrame:Clone()
+local Template3Button = Template3.TextButton
+local Template3Color = Color3.fromRGB(247, 6, 211)
+Template3.ItemIcon.ImageColor3 = Template3Color
+Template3.BorderColor3 = Template3Color
+Template3.ItemName.TextColor3 = Template3Color
+Template3.Parent = Items
+Template3.ItemName.Text = "Error all"
+Template3.Visible = true
+
 -- Data --
 
 function DefaultData(Path,Option)
@@ -260,10 +270,10 @@ end
 end
 
 function PlaySound(ID,instance,Volume:number,Looped:boolean)
-local Data = {"PlaySound",LocalPlayer.Name,"rbxassetid://" .. tonumber(ID),{workspace},tonumber(Volume),false}
+local Data = {"PlaySound",LocalPlayer.Name,"rbxassetid://" .. tonumber(ID),{instance},tonumber(Volume),false}
 game.ReplicatedStorage.GameEvents.Misk.ReplicateSound:FireServer(Data)
 local Sound = Instance.new("Sound")
-Sound.Parent = workspace
+Sound.Parent = instance
 Sound.SoundId = "rbxassetid://" .. tostring(ID)
 Sound.Volume = tonumber(Volume)
 Sound.Looped = Looped
@@ -345,6 +355,15 @@ Info.Confirm.Button.MouseButton1Click:Connect(function()
 		PlaySound(1837167368,workspace,tostring(TextBox2.Text),false)
 		elseif CurrentSoundSequenceType == 2 then
 			PlaySound(6600188325,workspace,tostring(TextBox2.Text),false)
+			elseif CurrentSoundSequenceType == 3 then
+				for i,v in pairs(game.Players:GetPlayers()) do
+					task.wait(math.random(1,100)/300)
+					task.spawn(function()
+					if v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") then
+					PlaySound(1304562514,v.Character:FindFirstChild("HumanoidRootPart"),tostring(TextBox2.Text),false)
+					end
+					end)
+				end
 		end
 		else
 			PlaySound(tonumber(TextBox.Text),workspace,tostring(TextBox2.Text),false)
@@ -361,4 +380,10 @@ Template2Button.MouseButton1Click:Connect(function()
 	TextBox.Text = "6600188325"
 	TextBox2.Text = "3"
 	CurrentSoundSequenceType = 2
+end)
+
+Template3Button.MouseButton1Click:Connect(function()
+	TextBox.Text = "CustomSoundSequence"
+	TextBox2.Text = "1"
+	CurrentSoundSequenceType = 3
 end)
