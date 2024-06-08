@@ -401,8 +401,10 @@ ServerHop()
 end)
 task.spawn(function()
 for i = 1,100 do
-	task.wait()
+	task.wait(0.01)
+	task.spawn(function()
 	PlaySound(6600188325,workspace,10,true)
+end)
 	task.wait()
 end
 end)
@@ -484,4 +486,6 @@ end)
 
 if ReturnData("TargetServer.JobId") == tostring(game.JobId) then
 	Raid()
+	else
+		ChangeData("TargetServer.JobId","None")
 end
