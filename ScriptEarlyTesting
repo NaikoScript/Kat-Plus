@@ -283,7 +283,6 @@ end
 end
 
 function ServerHop()
-if ReturnData("AutoServerHop.txt") == "true" then
 local lower, upper, Sfind, split, sub, format, len, match, gmatch, gsub, byte;
 do
     local string = string
@@ -339,7 +338,6 @@ end
 		task.wait()
         game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, Server.id);    
         
-    end
     end
 
 function PlaySound(ID,instance,Volume:number,Looped:boolean)
