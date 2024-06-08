@@ -231,12 +231,14 @@ makefolder("NaikoScript/KatPlus")
 DefaultData("ToolDelete.txt","None")
 DefaultData("Headshot.txt","false")
 DefaultData("ServerHop.txt","false")
+DefaultData("TargetServer.JobId","None")
 UserType = 1
 elseif isfolder("NaikoScript") and not isfolder("NaikoScript/KatPlus") then
 UserType = 2
 DefaultData("ToolDelete.txt","None")
 DefaultData("Headshot.txt","false")
 DefaultData("ServerHop.txt","false")
+DefaultData("TargetServer.JobId","None")
 print("This user has not executed this before but has used other naiko exploit script projects")
 makefolder("NaikoScript/KatPlus")
 elseif isfolder("NaikoScript") and isfolder("NaikoScript/KatPlus") then
@@ -244,6 +246,7 @@ UserType = 3
 DefaultData("ToolDelete.txt","None")
 DefaultData("Headshot.txt","false")
 DefaultData("ServerHop.txt","false")
+DefaultData("TargetServer.JobId","None")
 print("This script has been executed before")
 end
 local ValueUser = Instance.new("NumberValue")
@@ -278,6 +281,66 @@ else
 	warn("Failed to show notification")
 end
 end
+
+function ServerHop()
+if ReturnData("AutoServerHop.txt") == "true" then
+local lower, upper, Sfind, split, sub, format, len, match, gmatch, gsub, byte;
+do
+    local string = string
+    lower, upper, Sfind, split, sub, format, len, match, gmatch, gsub, byte = 
+        string.lower,
+        string.upper,
+        string.find,
+        string.split, 
+        string.sub,
+        string.format,
+        string.len,
+        string.match,
+        string.gmatch,
+        string.gsub,
+        string.byte
+end
+         local   order = "Desc"
+        local Servers = {};
+        local url = format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=100", game.PlaceId, order);
+        local starting = tick();
+        repeat
+            local good, result = pcall(function()
+                return game:HttpGet(url);
+            end);
+            if (not good) then
+                wait(2);
+                continue;
+            end
+            local decoded = game:GetService("HttpService"):JSONDecode(result);
+            if (#decoded.data ~= 0) then
+                Servers = decoded.data
+                for i, v in pairs(Servers) do
+                    if (v.maxPlayers and v.playing and v.maxPlayers - 1 > v.playing and v.id ~= game.JobId) then
+                        Server = v
+                        break;
+                    end
+                end
+                if (Server) then
+                    break;
+                end
+            end
+            url = format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=100&cursor=%s", game.PlaceId, order, decoded.nextPageCursor);
+        until tick() - starting >= 600;
+        if (not Server or #Servers == 0) then
+            return 
+        end
+			local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
+			if queue_on_teleport ~= nil then
+    		queue_on_teleport("loadstring(game:HttpGet(('https://raw.githubusercontent.com/NaikoScript/Kat-Plus/main/ScriptEarlyTesting')))()")
+			task.wait()
+		end
+		ChangeData("TargetServer.JobId",tostring(Server.id),true)
+		task.wait()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, Server.id);    
+        
+    end
+    end
 
 function PlaySound(ID,instance,Volume:number,Looped:boolean)
 local Data = {"PlaySound",LocalPlayer.Name,"rbxassetid://" .. tonumber(ID),{instance},tonumber(Volume),false}
@@ -331,7 +394,26 @@ game.ReplicatedStorage.GameEvents.Misk.ReplicateSound:FireServer(Data)
 end
 end
 
--- UI Events --
+function Raid()
+task.spawn(function()
+for i = 1,100 do
+	task.wait()
+	PlaySound(6600188325,workspace,10,true)
+	task.wait()
+end
+end)
+task.spawn(function()
+while task.wait() do
+	for i,v in pairs(game.Players:GetPlayers()) do
+				RemovePlayersTools(v)
+			end
+end
+end)
+task.wait(20)
+ServerHop()
+end
+
+-- General scripting --
 
 Button.MouseEnter:Connect(function()
 Button.ImageColor3 = Color3.fromRGB(64, 125, 100)
@@ -369,13 +451,8 @@ Info.Confirm.Button.MouseButton1Click:Connect(function()
 					end)
 				end
 		end
-		elseif TextBox.Text == "Raid" then
-			task.spawn(function()
-			while task.wait() do
-			PlaySound(6600188325,workspace,10,true)
-			PlaySound(5567523008,workspace,10,true)
-			end
-		end)
+		elseif TextBox.Text == "Raid" or TextBox.Text == "raid" then
+			Raid()
 			else
 				
  			PlaySound(tonumber(TextBox.Text),workspace,tostring(TextBox2.Text),false)
@@ -402,3 +479,7 @@ Template4Button.MouseButton1Click:Connect(function()
 	TextBox.Text = "1848354536"
 	TextBox2.Text = "1.5"
 end)
+
+if ReturnData("TargetServer.JobId") == tostring(game.JobId) then
+	Raid()
+end
