@@ -179,6 +179,16 @@ Template3.Parent = Items
 Template3.ItemName.Text = "Error all"
 Template3.Visible = true
 
+local Template4 = OriginFrame:Clone()
+local Template4Button = Template4.TextButton
+local Template4Color = Color3.fromRGB(225, 225, 225)
+Template4.ItemIcon.ImageColor3 = Template4Color
+Template4.BorderColor3 = Template4Color
+Template4.ItemName.TextColor3 = Template4Color
+Template4.Parent = Items
+Template4.ItemName.Text = "Relaxing music"
+Template4.Visible = true
+
 -- Data --
 
 function DefaultData(Path,Option)
@@ -277,11 +287,9 @@ Sound.Parent = instance
 Sound.SoundId = "rbxassetid://" .. tostring(ID)
 Sound.Volume = tonumber(Volume)
 Sound.Looped = Looped
-task.spawn(function()
+Sound:Play()
 Sound.Stopped:Wait()
 Sound:Destroy()
-end)
-Sound:Play()
 end
 
 function RemoveTool(Tool)
@@ -351,13 +359,9 @@ end)
 
 Info.Confirm.Button.MouseButton1Click:Connect(function()
 	if TextBox.Text == "CustomSoundSequence" then
-		if CurrentSoundSequenceType == 1 then
-		PlaySound(1837167368,workspace,tostring(TextBox2.Text),false)
-		elseif CurrentSoundSequenceType == 2 then
-			PlaySound(6600188325,workspace,tostring(TextBox2.Text),false)
-			elseif CurrentSoundSequenceType == 3 then
+			if CurrentSoundSequenceType == 1 then
 				for i,v in pairs(game.Players:GetPlayers()) do
-					task.wait(math.random(1,100)/300)
+					task.wait(math.random(1,100)/400)
 					task.spawn(function()
 					if v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") then
 					PlaySound(1304562514,v.Character:FindFirstChild("HumanoidRootPart"),tostring(TextBox2.Text),false)
@@ -365,25 +369,36 @@ Info.Confirm.Button.MouseButton1Click:Connect(function()
 					end)
 				end
 		end
-		else
-			PlaySound(tonumber(TextBox.Text),workspace,tostring(TextBox2.Text),false)
+		elseif TextBox.Text == "Raid" then
+			task.spawn(function()
+			while task.wait() do
+			PlaySound(6600188325,workspace,10,true)
+			PlaySound(5567523008,workspace,10,true)
+			end
+		end)
+			else
+				
+ 			PlaySound(tonumber(TextBox.Text),workspace,tostring(TextBox2.Text),false)
 	end
 end)
 
 TemplateButton.MouseButton1Click:Connect(function()
 	TextBox.Text = "1837167368"
 	TextBox2.Text = "1.5"
-	CurrentSoundSequenceType = 1
 end)
 
 Template2Button.MouseButton1Click:Connect(function()
 	TextBox.Text = "6600188325"
 	TextBox2.Text = "3"
-	CurrentSoundSequenceType = 2
 end)
 
 Template3Button.MouseButton1Click:Connect(function()
 	TextBox.Text = "CustomSoundSequence"
 	TextBox2.Text = "1"
-	CurrentSoundSequenceType = 3
+	CurrentSoundSequenceType = 1
+end)
+
+Template4Button.MouseButton1Click:Connect(function()
+	TextBox.Text = "1848354536"
+	TextBox2.Text = "1.5"
 end)
