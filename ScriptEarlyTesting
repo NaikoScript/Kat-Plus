@@ -361,16 +361,18 @@ Tool:FindFirstChild("ClientEvent"):FireServer("ConfirmDestruction",{})
 end
 end
 
-function RemovePlayersTools(Player,WeaponOnly)
-local WeaponOnly = WeaponOnly or true
-if Player.Character:FindFirstChildOfClass("Tool") then
-if  Player.Character:FindFirstChildOfClass("Tool").Name == "Knife" or Player.Character:FindFirstChildOfClass("Tool").Name == "Revolver" or WeaponOnly == false then
-	RemoveTool(Player.Character:FindFirstChildOfClass("Tool"))
-end
+function RemovePlayersTools(Player)
+
+for i,v in pairs(Player.Character:GetChildren()) do
+	if v:IsA("Tool") then
+		if v.Name == "Knife" or v.Name == "Revolver"then
+			RemoveTool(v)
+		end
+	end
 end
 for i,v in pairs(Player.Backpack:GetChildren()) do
 	if v:IsA("Tool") then
-		if v.Name == "Knife" or v.Name == "Revolver" or WeaponOnly == false then
+		if v.Name == "Knife" or v.Name == "Revolver"then
 			RemoveTool(v)
 		end
 	end
@@ -396,6 +398,10 @@ end
 
 function Raid()
 task.spawn(function()
+task.wait(20)
+ServerHop()
+end)
+task.spawn(function()
 for i = 1,100 do
 	task.wait()
 	PlaySound(6600188325,workspace,10,true)
@@ -409,8 +415,6 @@ while task.wait() do
 			end
 end
 end)
-task.wait(20)
-ServerHop()
 end
 
 -- General scripting --
