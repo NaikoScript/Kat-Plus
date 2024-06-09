@@ -48,6 +48,7 @@ Buttons.UISizeConstraint.MaxSize = Vector2.new(120,math.huge)
 
 Buttons.TradeButton.Visible = false -- why does it exist if its not gonna exist
 
+MainUI.Parent.Menu.MainMenuUI.Visible = false
 UI.Parent = MainUI.Round.RoundDisplay
 UI.Visible = false
 UI.Name = "PlusUI"
