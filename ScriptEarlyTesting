@@ -361,13 +361,14 @@ end
 end
 
 function RemovePlayersTools(Player)
-
+if Player.Character ~= nil then
 for i,v in pairs(Player.Character:GetChildren()) do
 	if v:IsA("Tool") then
 		if v.Name == "Knife" or v.Name == "Revolver"then
 			RemoveTool(v)
 		end
 	end
+end
 end
 for i,v in pairs(Player.Backpack:GetChildren()) do
 	if v:IsA("Tool") then
@@ -397,12 +398,13 @@ end
 
 function Raid()
 task.spawn(function()
-task.wait(20)
+while task.wait(math.random(10,20)) do
 ServerHop()
+end
 end)
 task.spawn(function()
-for i = 1,100 do
-	task.wait(0.01)
+for i = 1,250 do
+	task.wait(0.02)
 	task.spawn(function()
 	PlaySound(6600188325,workspace,10,true)
 end)
@@ -410,7 +412,7 @@ end)
 end
 end)
 task.spawn(function()
-while task.wait() do
+while task.wait(0.01) do
 	for i,v in pairs(game.Players:GetPlayers()) do
 				RemovePlayersTools(v)
 			end
