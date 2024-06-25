@@ -2,7 +2,7 @@
 > [!IMPORTANT]
 > **Join my [discord server](https://discord.gg/vAWJMYJYcR) to get notified when the script is officially available**
 ## Script thumbnail
-![KatPlusThumbnail](https://github.com/NaikoScript/Kat-Plus/assets/107273752/4fd94662-1b27-4d60-90c7-a442f3d0b595)
+![KatPlusThumbnail2](https://github.com/NaikoScript/Kat-Plus/assets/107273752/ebaf61bb-e753-4352-8056-c87d0729bc42)
 ## Script version
 `Version ?`
 ## Shortened Script
