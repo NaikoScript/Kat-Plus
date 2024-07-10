@@ -48,11 +48,8 @@ Button.Visible = true
 Button.Name = "PlusButton"
 Button:FindFirstChild("ButtonIcon").Image = "rbxassetid://17724539002"
 Button.ImageColor3 = Color3.fromRGB(54, 99, 81)
-Buttons.UISizeConstraint.MaxSize = Vector2.new(120,math.huge)
-
 
 Buttons.TradeButton.Visible = false -- why does it exist if its not gonna exist :skull:
-
 
 UI.Parent = MainUI.Round.RoundDisplay
 UI.Visible = false
@@ -436,16 +433,17 @@ if MainUI.Parent.Menu.MainMenuUI.Banned.Visible == true then
 	local BanMessages = {"Dw bro i got u","they fr thought they could ban you","the unban is yours","trash ban system? totally not 💀"}
 	BannedUI.TimeLeft.BanInfo.Text = BanMessages[math.random(1,#BanMessages)]
 	if UserType == 3 then
-	task.wait(1)
+	task.wait(1.5)
 	else
-	task.wait(3.25)
+	task.wait(4)
 	end
 	TweenService:Create(BannedUI.Splash,TweenInfo.new(0.75,Enum.EasingStyle.Linear),{ImageTransparency = 1}):Play()
 	TweenService:Create(BannedUI.Overlay,TweenInfo.new(0.75,Enum.EasingStyle.Linear),{BackgroundTransparency = 1}):Play()
 	TweenService:Create(BannedUI.TimeLeft,TweenInfo.new(0.75,Enum.EasingStyle.Linear),{TextTransparency = 1}):Play()
 	TweenService:Create(BannedUI.TimeLeft.BanInfo,TweenInfo.new(0.75,Enum.EasingStyle.Linear),{TextTransparency = 1}):Play()
-	task.wait(0.65)
+	task.wait(0.7)
 end
+TweenService:Create(Buttons.UISizeConstraint,TweenInfo.new(0.45,Enum.EasingStyle.Back),{MaxSize = Vector2.new(120,math.huge)}):Play()
 TweenService:Create(Scale,TweenInfo.new(0.6,Enum.EasingStyle.Back,Enum.EasingDirection.Out),{Scale = 1}):Play()
 
 Button.MouseEnter:Connect(function()
