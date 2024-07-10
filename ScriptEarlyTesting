@@ -192,6 +192,26 @@ Template4.Parent = Items
 Template4.ItemName.Text = "Relaxing music"
 Template4.Visible = true
 
+local Template5 = OriginFrame:Clone()
+local Template5Button = Template5.TextButton
+local Template5Color = Color3.fromRGB(255, 200, 0)
+Template5.ItemIcon.ImageColor3 = Template5Color
+Template5.BorderColor3 = Template5Color
+Template5.ItemName.TextColor3 = Template5Color
+Template5.Parent = Items
+Template5.ItemName.Text = "Boom headshot"
+Template5.Visible = true
+
+local Template6 = OriginFrame:Clone()
+local Template6Button = Template6.TextButton
+local Template6Color = Color3.fromRGB(46, 255, 0)
+Template6.ItemIcon.ImageColor3 = Template6Color
+Template6.BorderColor3 = Template6Color
+Template6.ItemName.TextColor3 = Template6Color
+Template6.Parent = Items
+Template6.ItemName.Text = "Pop"
+Template6.Visible = true
+
 -- Data --
 
 function DefaultData(Path,Option)
@@ -511,6 +531,16 @@ end)
 Template4Button.MouseButton1Click:Connect(function()
 	TextBox.Text = "1848354536"
 	TextBox2.Text = "1.5"
+end)
+
+Template5Button.MouseButton1Click:Connect(function()
+	TextBox.Text = "7154294653"
+	TextBox2.Text = "3"
+end)
+
+Template6Button.MouseButton1Click:Connect(function()
+	TextBox.Text = "6892830182"
+	TextBox2.Text = "8"
 end)
 
 if ReturnData("TargetServer.JobId") == tostring(game.JobId) then
