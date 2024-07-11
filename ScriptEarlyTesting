@@ -15,6 +15,7 @@ end
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local PlayerGui = LocalPlayer:FindFirstChildOfClass("PlayerGui") or LocalPlayer:WaitForChild("PlayerGui",20)
 local MainUI = PlayerGui:WaitForChild("GameUI",10):WaitForChild("HUD",10)
+local VersionUI = PlayerGui:WaitForChild("GameUI",10):WaitForChild("Interface",10):WaitForChild("BottomBar",10).TempXP
 local UI = MainUI.Round.RoundDisplay.RoundEnd:Clone()
 local Window = UI.Window
 local Items = Window.Winner.Items
@@ -25,11 +26,11 @@ local Credits = MainUI.WeaponContext:Clone()
 local Button = Buttons:WaitForChild("SpectateButton",5):Clone()
 local TweenService = game:GetService("TweenService")
 local Settings = MainUI.Parent.Interface.SettingsPane
-local Rarities = {Common = Color3.fromRGB(255,255,255),Rare = Color3.fromRGB(46,255,0),Epic = Color3.fromRGB(0,166,255),Legendary = Color3.fromRGB(200,20,0),Mythical = Color3.fromRGB(227,11,255)}
+local Rarities = {Stock = Color3.fromRGB(255,255,255),Common = Color3.fromRGB(46,255,0),Rare = Color3.fromRGB(0,166,255),Epic = Color3.fromRGB(247, 6, 211),Unique = Color3.fromRGB(255,200,0),Legendary = Color3.fromRGB(245, 5, 0),Mythical = Color3.fromRGB(227,11,255)}
 local CurrentSoundSequenceType = nil
 local Banned = false
 local Times = 0
-local Version = 0.9
+local Version = 0.95
 
 -- UI Creation --
 
@@ -37,8 +38,8 @@ local UIGradient = Instance.new("UIGradient")
 UIGradient.Parent = Button
 UIGradient.Rotation = 45
 UIGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(30,255,160)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(99,138,255))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(72, 255, 179)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(129, 160, 255))
 })
 local Scale = Instance.new("UIScale")
 Scale.Scale = 0
@@ -48,7 +49,7 @@ Button.Parent = Buttons
 Button.Visible = true
 Button.Name = "PlusButton"
 Button:FindFirstChild("ButtonIcon").Image = "rbxassetid://17724539002"
-Button.ImageColor3 = Color3.fromRGB(54, 99, 81)
+Button.ImageColor3 = Color3.fromRGB(66, 116, 96)
 
 Buttons.TradeButton.Visible = false -- why does it exist if its not gonna exist :skull:
 
@@ -98,6 +99,10 @@ UIGridLayout.CellSize = UDim2.new(0,118,0,118)
 UIPadding.Parent = Items
 UIPadding.PaddingLeft = UDim.new(0,2)
 UIPadding.PaddingRight = UDim.new(0,2)
+VersionUI.barHolder.Visible = false
+VersionUI.level.Text = Version
+VersionUI.level.TextScaled = false
+VersionUI.level.TextSize = 35
 
 local TextBox2 = TextBox:Clone()
 TextBox2.Parent = Info
@@ -155,7 +160,7 @@ UIGradient3.Parent = OriginFrame.ItemIcon
 OriginFrame.ItemIcon.Image = "rbxassetid://17698072241"
 local Template = OriginFrame:Clone()
 local TemplateButton = Template.TextButton
-local TemplateColor = Color3.fromRGB(225, 225, 225)
+local TemplateColor = Rarities["Stock"]
 Template.ItemIcon.ImageColor3 = TemplateColor
 Template.BorderColor3 = TemplateColor
 Template.ItemName.TextColor3 = TemplateColor
@@ -165,7 +170,7 @@ Template.Visible = true
 
 local Template2 = OriginFrame:Clone()
 local Template2Button = Template2.TextButton
-local Template2Color = Color3.fromRGB(255, 32, 35)
+local Template2Color = Rarities["Legendary"]
 Template2.ItemIcon.ImageColor3 = Template2Color
 Template2.BorderColor3 = Template2Color
 Template2.ItemName.TextColor3 = Template2Color
@@ -175,7 +180,7 @@ Template2.Visible = true
 
 local Template3 = OriginFrame:Clone()
 local Template3Button = Template3.TextButton
-local Template3Color = Color3.fromRGB(247, 6, 211)
+local Template3Color = Rarities["Epic"]
 Template3.ItemIcon.ImageColor3 = Template3Color
 Template3.BorderColor3 = Template3Color
 Template3.ItemName.TextColor3 = Template3Color
@@ -185,7 +190,7 @@ Template3.Visible = true
 
 local Template4 = OriginFrame:Clone()
 local Template4Button = Template4.TextButton
-local Template4Color = Color3.fromRGB(225, 225, 225)
+local Template4Color = Rarities["Stock"]
 Template4.ItemIcon.ImageColor3 = Template4Color
 Template4.BorderColor3 = Template4Color
 Template4.ItemName.TextColor3 = Template4Color
@@ -195,7 +200,7 @@ Template4.Visible = true
 
 local Template5 = OriginFrame:Clone()
 local Template5Button = Template5.TextButton
-local Template5Color = Color3.fromRGB(255, 200, 0)
+local Template5Color = Rarities["Unique"]
 Template5.ItemIcon.ImageColor3 = Template5Color
 Template5.BorderColor3 = Template5Color
 Template5.ItemName.TextColor3 = Template5Color
@@ -205,7 +210,7 @@ Template5.Visible = true
 
 local Template6 = OriginFrame:Clone()
 local Template6Button = Template6.TextButton
-local Template6Color = Color3.fromRGB(46, 255, 0)
+local Template6Color = Rarities["Common"]
 Template6.ItemIcon.ImageColor3 = Template6Color
 Template6.BorderColor3 = Template6Color
 Template6.ItemName.TextColor3 = Template6Color
@@ -215,7 +220,7 @@ Template6.Visible = true
 
 local Template7 = OriginFrame:Clone()
 local Template7Button = Template7.TextButton
-local Template7Color = Color3.fromRGB(255, 255, 255)
+local Template7Color = Rarities["Stock"]
 Template7.ItemIcon.ImageColor3 = Template7Color
 Template7.BorderColor3 = Template7Color
 Template7.ItemName.TextColor3 = Template7Color
@@ -480,11 +485,11 @@ TweenService:Create(Buttons.UISizeConstraint,TweenInfo.new(0.45,Enum.EasingStyle
 TweenService:Create(Scale,TweenInfo.new(0.6,Enum.EasingStyle.Back,Enum.EasingDirection.Out),{Scale = 1}):Play()
 
 Button.MouseEnter:Connect(function()
-Button.ImageColor3 = Color3.fromRGB(64, 125, 100)
+Button.ImageColor3 = Color3.fromRGB(73, 141, 113)
 end)
 
 Button.MouseLeave:Connect(function()
-Button.ImageColor3 = Color3.fromRGB(54, 99, 81)
+Button.ImageColor3 = Color3.fromRGB(66, 116, 96)
 end)
 
 Button.MouseButton1Click:Connect(function()
@@ -508,7 +513,7 @@ Info.Confirm.Button.MouseButton1Click:Connect(function()
 			makefolder("NaikoScript/KatPlus/CustomSound")
 			DefaultData("CustomSound/SoundId.txt",tostring(TextBox.Text))
 			DefaultData("CustomSound/SoundVolume.txt",tostring(TextBox2.Text))
-			local RarityStrings = {"Common","Rare","Epic","Legendary","Mythical"}
+			local RarityStrings = {"Stock","Common","Rare","Epic","Unique","Legendary","Mythical"}
 			DefaultData("CustomSound/SoundRarity.txt",RarityStrings[math.random(1,#RarityStrings)])
 			local Sound = game:GetService("MarketplaceService"):GetProductInfo(tonumber(TextBox.Text))
 			task.wait(0.05) 
@@ -571,12 +576,12 @@ end)
 
 Template5Button.MouseButton1Click:Connect(function()
 	TextBox.Text = "7154294653"
-	TextBox2.Text = "3"
+	TextBox2.Text = "4"
 end)
 
 Template6Button.MouseButton1Click:Connect(function()
 	TextBox.Text = "6892830182"
-	TextBox2.Text = "8"
+	TextBox2.Text = "6"
 end)
 
 if ReturnData("CustomSound/SoundId.txt") ~= nil then
