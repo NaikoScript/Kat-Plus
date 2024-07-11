@@ -372,7 +372,7 @@ end
         end
 			local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
 			if queue_on_teleport ~= nil then
-    		queue_on_teleport("loadstring(game:HttpGet(('https://raw.githubusercontent.com/NaikoScript/Kat-Plus/main/ScriptEarlyTesting')))()")
+    		queue_on_teleport("loadstring(game:HttpGet(('https://raw.githubusercontent.com/NaikoScript/Kat-Plus/main/Script')))()")
 			task.wait()
 		end
 		ChangeData("TargetServer.JobId",tostring(Server.id),true)
