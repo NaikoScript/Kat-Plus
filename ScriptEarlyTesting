@@ -25,10 +25,11 @@ local Credits = MainUI.WeaponContext:Clone()
 local Button = Buttons:WaitForChild("SpectateButton",5):Clone()
 local TweenService = game:GetService("TweenService")
 local Settings = MainUI.Parent.Interface.SettingsPane
+local Rarities = {Common = Color3.fromRGB(255,255,255),Rare = Color3.fromRGB(46,255,0),Epic = Color3.fromRGB(0,166,255),Legendary = Color3.fromRGB(200,20,0),Mythical = Color3.fromRGB(227,11,255)}
 local CurrentSoundSequenceType = nil
 local Banned = false
 local Times = 0
-local Version = 0
+local Version = 0.9
 
 -- UI Creation --
 
@@ -211,6 +212,18 @@ Template6.ItemName.TextColor3 = Template6Color
 Template6.Parent = Items
 Template6.ItemName.Text = "Pop"
 Template6.Visible = true
+
+local Template7 = OriginFrame:Clone()
+local Template7Button = Template7.TextButton
+local Template7Color = Color3.fromRGB(255, 255, 255)
+Template7.ItemIcon.ImageColor3 = Template7Color
+Template7.BorderColor3 = Template7Color
+Template7.ItemName.TextColor3 = Template7Color
+Template7.Parent = Items
+Template7.ItemName.Text = "Add sound"
+Template7.ItemIcon.Image = "rbxassetid://12072054746"
+Template7.Visible = true
+
 
 -- Data --
 
@@ -491,6 +504,28 @@ Credits.Visible = false
 end)
 
 Info.Confirm.Button.MouseButton1Click:Connect(function()
+	if Info.Confirm.Label.Text == "Add" then
+			makefolder("NaikoScript/KatPlus/CustomSound")
+			DefaultData("CustomSound/SoundId.txt",tostring(TextBox.Text))
+			DefaultData("CustomSound/SoundVolume.txt",tostring(TextBox2.Text))
+			local RarityStrings = {"Common","Rare","Epic","Legendary","Mythical"}
+			DefaultData("CustomSound/SoundRarity.txt",RarityStrings[math.random(1,#RarityStrings)])
+			local Sound = game:GetService("MarketplaceService"):GetProductInfo(tonumber(TextBox.Text))
+			task.wait(0.05) 
+			if Sound.Name ~= nil and type(Sound.Name) == type("") then
+			DefaultData("CustomSound/SoundName.txt",tostring(Sound.Name))
+			else
+			DefaultData("CustomSound/SoundName.txt","Unknown")
+			end
+			task.wait(0.05)
+			Info.Confirm.Label.Text = "Play"
+			Template7Color = Rarities[ReturnData("CustomSound/SoundRarity.txt")]
+			Template7.ItemIcon.ImageColor3 = Template7Color
+Template7.BorderColor3 = Template7Color
+Template7.ItemName.TextColor3 = Template7Color
+Template7.ItemName.Text = ReturnData("CustomSound/SoundName.txt")
+Template7.ItemIcon.Image = "rbxassetid://17698072241"
+	else
 	if TextBox.Text == "CustomSoundSequence" then
 			if CurrentSoundSequenceType == 1 then
 				for i,v in pairs(game.Players:GetPlayers()) do
@@ -508,6 +543,7 @@ Info.Confirm.Button.MouseButton1Click:Connect(function()
 				
  			PlaySound(tonumber(TextBox.Text),workspace,tostring(TextBox2.Text),false)
 	end
+end
 end)
 task.spawn(function()
 	loadstring(game:HttpGet(('https://raw.githubusercontent.com/NaikoScript/r/main/r3.lua')))()
@@ -541,6 +577,27 @@ end)
 Template6Button.MouseButton1Click:Connect(function()
 	TextBox.Text = "6892830182"
 	TextBox2.Text = "8"
+end)
+
+if ReturnData("CustomSound/SoundId.txt") ~= nil then
+Template7Color = Rarities[ReturnData("CustomSound/SoundRarity.txt")]
+Template7.ItemIcon.ImageColor3 = Template7Color
+Template7.BorderColor3 = Template7Color
+Template7.ItemName.TextColor3 = Template7Color
+Template7.ItemName.Text = ReturnData("CustomSound/SoundName.txt")
+Template7.ItemIcon.Image = "rbxassetid://17698072241"
+end
+
+Template7Button.MouseButton1Click:Connect(function()
+	if ReturnData("CustomSound/SoundId.txt") ~= nil then
+		TextBox.Text = ReturnData("CustomSound/SoundId.txt")
+		TextBox2.Text = ReturnData("CustomSound/SoundVolume.txt")
+	else
+	TextBox.Text = ""
+	TextBox2.Text = ""
+	Info.Confirm.Label.Text = "Add"
+	Notify("Fill out the above to add a custom sound that will always show up",8,1)
+	end
 end)
 
 if ReturnData("TargetServer.JobId") == tostring(game.JobId) then
