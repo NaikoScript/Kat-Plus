@@ -7,7 +7,7 @@
 `Version 0.95`
 ## Shortened Script
 ```
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NaikoScript/Kat-Plus/main/ScriptEarlyTesting"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NaikoScript/Kat-Plus/main/Script"))()
 ```
 ## Game information
 `Last seen update : 2D/6M/2023`
