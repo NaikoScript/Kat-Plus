@@ -271,12 +271,12 @@ DefaultData("TargetServer.JobId","None")
 UserType = 1
 elseif isfolder("NaikoScript") and not isfolder("NaikoScript/KatPlus") then
 UserType = 2
+makefolder("NaikoScript/KatPlus")
 DefaultData("ToolDelete.txt","None")
 DefaultData("Headshot.txt","false")
 DefaultData("ServerHop.txt","false")
 DefaultData("TargetServer.JobId","None")
 print("This user has not executed this before but has used other naiko exploit script projects")
-makefolder("NaikoScript/KatPlus")
 elseif isfolder("NaikoScript") and isfolder("NaikoScript/KatPlus") then
 UserType = 3
 DefaultData("ToolDelete.txt","None")
