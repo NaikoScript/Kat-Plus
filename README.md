@@ -4,7 +4,7 @@
 ## Script thumbnail
 ![KatPlusThumbnail2](https://github.com/NaikoScript/Kat-Plus/assets/107273752/ebaf61bb-e753-4352-8056-c87d0729bc42)
 ## Script version
-`Version ?`
+`Version 0.9`
 ## Shortened Script
 ```
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NaikoScript/Kat-Plus/main/ScriptEarlyTesting"))()
