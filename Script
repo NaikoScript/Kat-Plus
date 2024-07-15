@@ -58,6 +58,7 @@ UI.Visible = false
 UI.Name = "PlusUI"
 Window.UISizeConstraint.MinSize = Vector2.new(0,500)
 Window.Winner.Portrait.Visible = false
+Window.UIAspectRatioConstraint.AspectRatio = 0.9
 Window.Winner.Size = UDim2.new(1,0,0.8,0)
 Info.Confirm.Label.Text = "Play"
 Info.Confirm.Size = UDim2.new(0.25,0,0.6,0)
