@@ -10,7 +10,7 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NaikoScript/Kat-Plus/main/Script"))()
 ```
 ## Game information
-`Last seen update : 2D/6M/2023`
+`Last seen update : 20D/9M/2023`
 ```
 https://www.roblox.com/games/621129760
 ```
