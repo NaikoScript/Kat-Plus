@@ -30,7 +30,7 @@ local Rarities = {Stock = Color3.fromRGB(255,255,255),Common = Color3.fromRGB(46
 local CurrentSoundSequenceType = nil
 local Banned = false
 local Times = 0
-local Version = "1.0"
+local Version = 1.02
 
 -- UI Creation --
 
@@ -434,8 +434,8 @@ end
         
     end
 
-function PlaySound(ID,instance,Volume:number,Looped:boolean,LocalVolume:number)
-local Data = {"PlaySound",LocalPlayer.Name,"rbxassetid://" .. ID,{instance},tonumber(Volume),false}
+function S(ID,instance,Volume:number,Looped:boolean,LocalVolume:number)
+local Data = {"PlaySound",LocalPlayer.Name,"rbxassetid://" .. ID,{instance},tonumber(Volume),Looped}
 game.ReplicatedStorage.GameEvents.Misk.ReplicateSound:FireServer(Data)
 local Sound = Instance.new("Sound")
 Sound.Parent = instance
@@ -447,18 +447,18 @@ Sound.Stopped:Wait()
 Sound:Destroy()
 end
 
-function RemoveTool(Tool)
+function RT(Tool)
 if Tool:FindFirstChild("ClientEvent") then
 Tool:FindFirstChild("ClientEvent"):FireServer("ConfirmDestruction",{})
 end
 end
 
-function RemovePlayersTools(Player)
+function RPT(Player)
 if Player.Character ~= nil then
 for i,v in pairs(Player.Character:GetChildren()) do
 	if v:IsA("Tool") then
 		if v.Name == "Knife" or v.Name == "Revolver"then
-			RemoveTool(v)
+			RT(v)
 		end
 	end
 end
@@ -466,18 +466,18 @@ end
 for i,v in pairs(Player.Backpack:GetChildren()) do
 	if v:IsA("Tool") then
 		if v.Name == "Knife" or v.Name == "Revolver"then
-			RemoveTool(v)
+			RT(v)
 		end
 	end
 end
 end
 
-function QuickSound(ID)
+function QS(ID)
 local Data = {"PlaySound",LocalPlayer.Name,("rbxassetid://" .. tostring(ID)),{workspace},"1",false}
 game.ReplicatedStorage.GameEvents.Misk.ReplicateSound:FireServer(Data)
 end
 
-function LagRequest()
+function LR()
 	task.spawn(function()
 	for i = 1,10000 do
 		local Data = {"PlaySound",game.Players.LocalPlayer.Name,"rbxassetid://1843497734",{workspace,workspace,workspace,workspace,workspace,workspace,workspace,workspace},0,true}
@@ -495,17 +495,17 @@ end
 end)
 task.spawn(function()
 for i = 1,250 do
-	task.wait(0.02)
+	task.wait(0.05)
 	task.spawn(function()
-	PlaySound(6600188325,workspace,10,true,0.1)
+	S(6600188325,workspace,10,true,0.02)
 end)
 	task.wait()
 end
 end)
 task.spawn(function()
-while task.wait(0.01) do
+while task.wait(0.03) do
 	for i,v in pairs(game.Players:GetPlayers()) do
-				RemovePlayersTools(v)
+				RPT(v)
 			end
 end
 end)
@@ -627,7 +627,7 @@ local Lagging = false
 Confirm.Button.MouseButton1Click:Connect(function()
 	if Lagging ~= true then 
 			Lagging = true 
-			LagRequest()
+			LR()
 			task.spawn(function()
 			Notify("Trying to lag everyone else in the server (by fps) your ping might increase",5,1)
 			task.wait(5.2)
@@ -636,7 +636,7 @@ Confirm.Button.MouseButton1Click:Connect(function()
 			task.wait(1.75)
 			while task.wait(9) do
 				Notify("Sending lag requests...",1.75,0.75)
-				LagRequest()
+				LR()
 			end
 		else
 			Notify("You are already lagging the server",5,1)
@@ -681,7 +681,7 @@ Template7.ItemIcon.Image = "rbxassetid://17698072241"
 					task.wait(math.random(1,100)/400)
 					task.spawn(function()
 					if v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") then
-					PlaySound(1304562514,v.Character:FindFirstChild("HumanoidRootPart"),tostring(TextBox2.Text),false)
+					S(1304562514,v.Character:FindFirstChild("HumanoidRootPart"),tostring(TextBox2.Text),false)
 					end
 					end)
 				end
@@ -690,7 +690,7 @@ Template7.ItemIcon.Image = "rbxassetid://17698072241"
 			--Raid()
 			Notify("This feature has been removed please look at the button above 💀",5.5,1)
 		else	
- 			PlaySound(tonumber(TextBox.Text),workspace,tostring(TextBox2.Text),false)
+ 			S(tonumber(TextBox.Text),workspace,tostring(TextBox2.Text),false)
 	end
 end
 end)
