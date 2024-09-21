@@ -2,7 +2,7 @@
 > [!IMPORTANT]
 > **Join my [discord server](https://discord.gg/vAWJMYJYcR) if you find any bugs or have issues with the script**
 ## Script thumbnail
-![KatPlusThumbnail2](https://github.com/NaikoScript/Kat-Plus/assets/107273752/ebaf61bb-e753-4352-8056-c87d0729bc42)
+![KatPlusThumbnail2](https://github.com/user-attachments/assets/0c765e95-0612-418b-a06c-b6dd726efe4f)
 ## Script version
 `Version 1.0`
 ## Shortened Script
