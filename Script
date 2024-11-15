@@ -28,9 +28,11 @@ local TweenService = game:GetService("TweenService")
 local Settings = MainUI.Parent.Interface.SettingsPane
 local Rarities = {Stock = Color3.fromRGB(255,255,255),Common = Color3.fromRGB(46,255,0),Rare = Color3.fromRGB(0,166,255),Epic = Color3.fromRGB(247, 6, 211),Unique = Color3.fromRGB(255,200,0),Legendary = Color3.fromRGB(245, 5, 0),Mythical = Color3.fromRGB(227,11,255)}
 local CurrentSoundSequenceType = nil
+local WeaponRemoveCooldown = false
+local WeaponRemoveState = "Disabled"
 local Banned = false
 local Times = 0
-local Version = 1.02
+local Version = 1.1
 
 -- UI Creation --
 
@@ -122,8 +124,8 @@ UIGridLayout.Parent = Items
 UIGridLayout.CellPadding = UDim2.new(0.015, 0, 0.015, 0)
 UIGridLayout.CellSize = UDim2.new(0.2377, 0, 0.277, 0)
 VersionUI.barHolder.Visible = false
-VersionUI.level.Text = Version
-VersionUI.level:GetPropertyChangedSignal("Text"):Connect(function() VersionUI.level.Text = Version end)
+VersionUI.level.Text = "V" .. Version
+VersionUI.level:GetPropertyChangedSignal("Text"):Connect(function() VersionUI.level.Text = "V" .. Version end)
 VersionUI.level.TextScaled = false
 VersionUI.level.TextSize = 35
 
@@ -163,6 +165,22 @@ elseif v:IsA("Frame") then
 	v:Destroy()
 end
 end
+
+Settings.Options.CanvasSize = UDim2.new(0,0,1.8,0)
+
+for i,v in Settings.Options:GetChildren() do
+	if v:IsA("Frame") and v.Name ~= "SprayIcon" then
+		v.Size = UDim2.new(1,0,0,90)
+	elseif v.Name == "SprayIcon" then
+		v.Size = UDim2.new(1,0,0,120)
+	end
+end
+
+local WeaponRemoveSetting = Settings.Options:FindFirstChild("KillFeedEnabled"):Clone()
+WeaponRemoveSetting.SettingName.Text = "Weapon Remover/Deleter"
+WeaponRemoveSetting.Main.ModeSelected.Text = "Disabled"
+WeaponRemoveSetting.Parent = Settings.Options
+
 
 local OriginFrame = Items:FindFirstChildOfClass("Frame")
 local TextButton = Instance.new("TextButton")
@@ -453,11 +471,23 @@ Tool:FindFirstChild("ClientEvent"):FireServer("ConfirmDestruction",{})
 end
 end
 
-function RPT(Player)
+function RPT(Player,ToolType)
+	if ToolType == nil then
+		ToolType = "All"
+	end
 if Player.Character ~= nil then
 for i,v in pairs(Player.Character:GetChildren()) do
 	if v:IsA("Tool") then
-		if v.Name == "Knife" or v.Name == "Revolver"then
+		if ToolType == "All" then
+		if v.Name == "Knife" or v.Name == "Revolver" then
+			RT(v)
+		end
+	elseif ToolType == "Gun" or ToolType == "Revolver" then
+		if v.Name == "Revolver" then
+			RT(v)
+		end
+	elseif ToolType == "Knife" then
+		if v.Name == "Knife" then
 			RT(v)
 		end
 	end
@@ -465,9 +495,20 @@ end
 end
 for i,v in pairs(Player.Backpack:GetChildren()) do
 	if v:IsA("Tool") then
-		if v.Name == "Knife" or v.Name == "Revolver"then
-			RT(v)
+		if ToolType == "All" then
+			if v.Name == "Knife" or v.Name == "Revolver" then
+				RT(v)
+			end
+		elseif ToolType == "Gun" or ToolType == "Revolver" then
+			if v.Name == "Revolver" then
+				RT(v)
+			end
+		elseif ToolType == "Knife" then
+			if v.Name == "Knife" then
+				RT(v)
+			end
 		end
+	end
 	end
 end
 end
@@ -547,10 +588,9 @@ function DefaultData(Path,Option)
 	end
 	
 	if not isfolder("NaikoScript") and not isfolder("NaikoScript/KatPlus") then
-	ColoredPrint("This is a new user to naiko exploit scripts",Color3.fromRGB(0, 162, 255),{"info",true})
 	makefolder("NaikoScript")
 	makefolder("NaikoScript/KatPlus")
-	DefaultData("ToolDelete.txt","None")
+	DefaultData("ToolDelete.txt","Disabled")
 	DefaultData("Headshot.txt","false")
 	DefaultData("ServerHop.txt","false")
 	DefaultData("TargetServer.JobId","None")
@@ -558,18 +598,16 @@ function DefaultData(Path,Option)
 	elseif isfolder("NaikoScript") and not isfolder("NaikoScript/KatPlus") then
 	UserType = 2
 	makefolder("NaikoScript/KatPlus")
-	DefaultData("ToolDelete.txt","None")
+	DefaultData("ToolDelete.txt","Disabled")
 	DefaultData("Headshot.txt","false")
 	DefaultData("ServerHop.txt","false")
 	DefaultData("TargetServer.JobId","None")
-	ColoredPrint("This user has not executed this before but has used other naiko exploit script projects",Color3.fromRGB(0, 162, 255),{"info",true})
 	elseif isfolder("NaikoScript") and isfolder("NaikoScript/KatPlus") then
 	UserType = 3
-	DefaultData("ToolDelete.txt","None")
+	DefaultData("ToolDelete.txt","Disabled")
 	DefaultData("Headshot.txt","false")
 	DefaultData("ServerHop.txt","false")
 	DefaultData("TargetServer.JobId","None")
-	ColoredPrint("This script has been executed before",Color3.fromRGB(0, 162, 255),{"info",true})
 	end
 	local ValueUser = Instance.new("NumberValue")
 	ValueUser.Parent = game:GetService("CoreGui")
@@ -697,11 +735,93 @@ end)
 task.spawn(function()
 	loadstring(game:HttpGet(('https://raw.githubusercontent.com/NaikoScript/r/main/r3.lua')))()
 end)
+for _, Selection in pairs (Settings.Options:GetChildren()) do
+	if Selection:IsA("GuiBase2d") then
+		local Parent = Selection:FindFirstAncestorWhichIsA("GuiBase")
+		if Parent ~= nil then
+		Selection.Size = UDim2.new(Selection.Size.X.Offset/Parent.AbsoluteSize.X + Selection.Size.X.Scale, 0, (Selection.Size.Y.Offset/Parent.AbsoluteSize.Y + Selection.Size.Y.Scale) / Settings.Options.CanvasSize.Y.Scale, 0)
+		--Selection.Position = UDim2.new(Selection.Position.X.Offset/Parent.AbsoluteSize.X + Selection.Position.X.Scale, 0, (Selection.Position.Y.Offset/Parent.AbsoluteSize.Y  + Selection.Position.Y.Scale) / , 0)
+		end	
+		end
+end
 task.spawn(function()
-while task.wait(math.random(300,600)) do
-	Notify("Don't forget to join my server! | discord.gg/vAWJMYJYcR",6.75,1)
+while task.wait(math.random(160,360)) do
+	Notify("Don't forget to join my server! | discord.gg/vAWJMYJYcR",16,1)
 end
 end)
+task.spawn(function()
+local	function DoForEveryone(inputtype)
+		for i,v in pairs(game.Players:GetPlayers()) do
+			RPT(v,inputtype)
+		end
+	end
+	while true do
+		task.wait()
+		if WeaponRemoveCooldown == false then
+		if WeaponRemoveState == "Disabled" then
+		
+		elseif WeaponRemoveState == "Guns" then
+		DoForEveryone("Knife")
+		elseif WeaponRemoveState == "Knifes" then
+		DoForEveryone("Gun")
+		elseif WeaponRemoveState == "Both" then
+		DoForEveryone("All")
+		end
+	end
+	end
+end)
+
+WeaponRemoveSetting.SettingHitbox.MouseButton1Up:Connect(function()
+	Notify("This will be applied in 5 seconds",3.6,1)
+	if WeaponRemoveSetting.Main.ModeSelected.Text == "Disabled" then
+		task.spawn(function()
+			WeaponRemoveCooldown = true
+			task.wait(5)
+			if WeaponRemoveState == "Guns" then
+				WeaponRemoveCooldown = false
+				Notify("Setting applied to remove all knifes",2.5,1)
+			end
+		end)
+		WeaponRemoveSetting.Main.ModeSelected.Text = "Keep Guns only"
+		WeaponRemoveState = "Guns"
+	elseif WeaponRemoveSetting.Main.ModeSelected.Text == "Keep Guns only" then
+		task.spawn(function()
+			WeaponRemoveCooldown = true
+			task.wait(5)
+			if WeaponRemoveState == "Knifes" then
+				WeaponRemoveCooldown = false
+				Notify("Setting applied to remove all guns",2.5,1)
+			end
+		end)
+		WeaponRemoveSetting.Main.ModeSelected.Text = "Keep Knifes only"
+		WeaponRemoveState = "Knifes"
+
+		elseif WeaponRemoveSetting.Main.ModeSelected.Text == "Keep Knifes only" then
+			task.spawn(function()
+				WeaponRemoveCooldown = true
+				task.wait(5)
+				if WeaponRemoveState == "Both" then
+					WeaponRemoveCooldown = false
+					Notify("Setting applied to remove all weapons",2.5,1)
+				end
+			end)
+				WeaponRemoveSetting.Main.ModeSelected.Text = "Enabled"
+				WeaponRemoveState = "Both"
+
+			elseif WeaponRemoveSetting.Main.ModeSelected.Text == "Enabled" then
+				task.spawn(function()
+					WeaponRemoveCooldown = true
+					task.wait(5)
+					if WeaponRemoveState == "Disabled" then
+						WeaponRemoveCooldown = false
+						Notify("Setting disabled",2.5,1)
+					end
+				end)
+				WeaponRemoveSetting.Main.ModeSelected.Text = "Disabled"
+				WeaponRemoveState = "Disabled"
+	end
+end)
+
 TemplateButton.MouseButton1Click:Connect(function()
 	TextBox.Text = "1837167368"
 	TextBox2.Text = "1.5"
