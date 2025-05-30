@@ -155,15 +155,15 @@ Credits.Visible = false
 Credits.Label.Fade.ImageTransparency = 1
 
 for i,v in pairs(Items:GetChildren()) do
-if v:IsA("Frame") and v:FindFirstChild("ItemName") and not (Times > 0) then
-Times = Times + 1
-local TextLabel = v:FindFirstChild("ItemName")
-TextLabel.Size = UDim2.new(1,0,0.254,0)
-TextLabel.Position = UDim2.new(1,0,1,0)
-TextLabel.TextXAlignment = Enum.TextXAlignment.Center
-elseif v:IsA("Frame") then
-	v:Destroy()
-end
+	if v:IsA("Frame") and v:FindFirstChild("ItemName") and not (Times > 0) then
+		Times = Times + 1
+		local TextLabel = v:FindFirstChild("ItemName")
+		TextLabel.Size = UDim2.new(1,0,0.254,0)
+		TextLabel.Position = UDim2.new(1,0,1,0)
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Center
+	elseif v:IsA("Frame") then
+		v:Destroy()
+	end
 end
 
 Settings.Options.CanvasSize = UDim2.new(0,0,1.8,0)
@@ -561,58 +561,50 @@ function DefaultData(Path,Option)
 		writefile("NaikoScript/KatPlus/" .. Path,Option)
 		return ColoredPrint("Set default data",Color3.fromRGB(125,230,75),{"success",true})
 	end
-	end
+end
 	
-	function ChangeData(Path,Option,WithFolder)
+function ChangeData(Path,Option,WithFolder)
 	if WithFolder == false then
-	if isfile(Path) ~= false then
-	return writefile(Path,Option)
-	end
+		if isfile(Path) ~= false then
+			return writefile(Path,Option)
+		end
 	else 
-	if isfile("NaikoScript/KatPlus/" .. Path) ~= false then
-	return writefile("NaikoScript/KatPlus/" .. Path,Option)
+		if isfile("NaikoScript/KatPlus/" .. Path) ~= false then
+			return writefile("NaikoScript/KatPlus/" .. Path,Option)
+		end
 	end
-	end
-	end
-	
-	function ReturnData(Path,WithFolder)
+end
+
+function ReturnData(Path,WithFolder)
 	if WithFolder == false then
-	if isfile(Path) ~= false then
-	return readfile(Path)
-	end
+		if isfile(Path) ~= false then
+			return readfile(Path)
+		end
 	else
-	if isfile("NaikoScript/KatPlus/" .. Path) ~= false then
-	return readfile("NaikoScript/KatPlus/" .. Path)
+		if isfile("NaikoScript/KatPlus/" .. Path) ~= false then
+			return readfile("NaikoScript/KatPlus/" .. Path)
+		end
 	end
-	end
-	end
-	
-	if not isfolder("NaikoScript") and not isfolder("NaikoScript/KatPlus") then
+end
+
+if not isfolder("NaikoScript") and not isfolder("NaikoScript/KatPlus") then
 	makefolder("NaikoScript")
 	makefolder("NaikoScript/KatPlus")
-	DefaultData("ToolDelete.txt","Disabled")
-	DefaultData("Headshot.txt","false")
-	DefaultData("ServerHop.txt","false")
-	DefaultData("TargetServer.JobId","None")
 	UserType = 1
-	elseif isfolder("NaikoScript") and not isfolder("NaikoScript/KatPlus") then
+elseif isfolder("NaikoScript") and not isfolder("NaikoScript/KatPlus") then
 	UserType = 2
 	makefolder("NaikoScript/KatPlus")
-	DefaultData("ToolDelete.txt","Disabled")
-	DefaultData("Headshot.txt","false")
-	DefaultData("ServerHop.txt","false")
-	DefaultData("TargetServer.JobId","None")
-	elseif isfolder("NaikoScript") and isfolder("NaikoScript/KatPlus") then
+elseif isfolder("NaikoScript") and isfolder("NaikoScript/KatPlus") then
 	UserType = 3
-	DefaultData("ToolDelete.txt","Disabled")
-	DefaultData("Headshot.txt","false")
-	DefaultData("ServerHop.txt","false")
-	DefaultData("TargetServer.JobId","None")
-	end
-	local ValueUser = Instance.new("NumberValue")
-	ValueUser.Parent = game:GetService("CoreGui")
-	ValueUser.Name = "UserType"
-	ValueUser.Value = UserType
+end
+DefaultData("ToolDelete.txt","Disabled")
+DefaultData("Headshot.txt","false")
+DefaultData("ServerHop.txt","false")
+DefaultData("TargetServer.JobId","None")
+local ValueUser = Instance.new("NumberValue")
+ValueUser.Parent = game:GetService("CoreGui")
+ValueUser.Name = "UserType"
+ValueUser.Value = UserType
 
 -- General scripting --
 
@@ -689,7 +681,6 @@ Confirm2.Button.MouseButton1Click:Connect(function()
 	end
 end)
 
-
 Info.Confirm.Button.MouseButton1Click:Connect(function()
 	if Info.Confirm.Label.Text == "Add" then
 			makefolder("NaikoScript/KatPlus/CustomSound")
@@ -728,7 +719,7 @@ Template7.ItemIcon.Image = "rbxassetid://17698072241"
 			--Raid()
 			Notify("This feature has been removed please look at the button above 💀",5.5,1)
 		else	
- 			S(tonumber(TextBox.Text),workspace,tostring(TextBox2.Text),false)
+ 			S(TextBox.Text,workspace,tostring(TextBox2.Text),false)
 	end
 end
 end)
@@ -746,7 +737,7 @@ for _, Selection in pairs (Settings.Options:GetChildren()) do
 end
 task.spawn(function()
 while task.wait(math.random(160,360)) do
-	Notify("Don't forget to join my server! | discord.gg/vAWJMYJYcR",16,1)
+	Notify("Don't forget to join my server! | discord.gg/aHm5hsfHGr",16,1)
 end
 end)
 task.spawn(function()
